@@ -64,7 +64,7 @@ namespace GameComponents
             List <Cell> createdPath = new List<Cell>();
                                                         
             mazePathStack.Push(firstMazePosition);
-            Maze.Directions currentDirection = Maze.Directions.None;
+            Maze.Direction currentDirection = Maze.Direction.None;
 
             while (mazePathStack.Count != 0)
             {
@@ -73,7 +73,7 @@ namespace GameComponents
                 int curCol = mazePathStack.Peek().Col;
 
 
-                if ((currentDirection = GetNextRandomDirection(this.maze, curRow, curCol)) == Maze.Directions.None)
+                if ((currentDirection = GetNextRandomDirection(this.maze, curRow, curCol)) == Maze.Direction.None)
       
                     mazePathStack.Pop();
                 
@@ -84,16 +84,16 @@ namespace GameComponents
 
                     switch (currentDirection)
                     {
-                        case Maze.Directions.North:
+                        case Maze.Direction.North:
                             nextRow--;
                             break;
-                        case Maze.Directions.South:
+                        case Maze.Direction.South:
                             nextRow++;
                             break;
-                        case Maze.Directions.West:
+                        case Maze.Direction.West:
                             nextCol--;
                             break;
-                        case Maze.Directions.East:
+                        case Maze.Direction.East:
                             nextCol++;
                             break;
                     }
@@ -195,23 +195,23 @@ namespace GameComponents
         /// <param name="source">The source cell.</param>
         /// <param name="destination">The destination cell.</param>
         /// <param name="direction">The direction moved.</param>
-        private void SetWallsByDirection(Cell source, Cell destination, Maze.Directions direction)
+        public static void SetWallsByDirection(Cell source, Cell destination, Maze.Direction direction)
         {
             switch (direction)
             {
-                case Maze.Directions.North:
+                case Maze.Direction.North:
                     source.TopWall = false;
                     destination.BottomWall = false;
                     break;
-                case Maze.Directions.South:
+                case Maze.Direction.South:
                     source.BottomWall = false;
                     destination.TopWall = false;
                     break;
-                case Maze.Directions.West:
+                case Maze.Direction.West:
                     source.LeftWall = false;
                     destination.RightWall = false;
                     break;
-                case Maze.Directions.East:
+                case Maze.Direction.East:
                     source.RightWall = false;
                     destination.LeftWall = false;
                     break;
@@ -230,24 +230,24 @@ namespace GameComponents
         /// <param name="row">The source row.</param>
         /// <param name="column">The source col.</param>
         /// <returns>The direction of the next available free cell.</returns>
-        public Maze.Directions GetNextRandomDirection(Cell[,] maze, int row, int column)
+        public Maze.Direction GetNextRandomDirection(Cell[,] mazeToCheck, int row, int column)
         {
-            List<Maze.Directions> availablePosition = new List<Maze.Directions>();
+            List<Maze.Direction> availablePosition = new List<Maze.Direction>();
 
-            if (row > 0 && !maze[row - 1, column].Visited)
-                availablePosition.Add(Maze.Directions.North);
+            if (row > 0 && !mazeToCheck[row - 1, column].Visited)
+                availablePosition.Add(Maze.Direction.North);
 
-            if (row < rows - 1 && !maze[row + 1, column].Visited)
-                availablePosition.Add(Maze.Directions.South);
+            if (row < rows - 1 && !mazeToCheck[row + 1, column].Visited)
+                availablePosition.Add(Maze.Direction.South);
 
-            if (column < columns - 1 && !maze[row, column + 1].Visited)
-                availablePosition.Add(Maze.Directions.East);
+            if (column < columns - 1 && !mazeToCheck[row, column + 1].Visited)
+                availablePosition.Add(Maze.Direction.East);
 
-            if (column > 0 && !maze[row, column - 1].Visited)
-                availablePosition.Add(Maze.Directions.West);
+            if (column > 0 && !mazeToCheck[row, column - 1].Visited)
+                availablePosition.Add(Maze.Direction.West);
 
             return availablePosition.Count == 0 ?
-                Maze.Directions.None : availablePosition[random.Next(0, availablePosition.Count)];
+                Maze.Direction.None : availablePosition[random.Next(0, availablePosition.Count)];
         }
 
         /// <summary>

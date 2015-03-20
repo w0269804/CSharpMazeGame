@@ -8,11 +8,9 @@ using GameComponents;
 using System.Resources;
 using System.Media;
 
-
 namespace Maze
 {
     public class Renderer
-
     {
         /// Variables to Size the Various Elements
         public static readonly int CellWallHeight = 50; // the height of a single cell
@@ -41,7 +39,7 @@ namespace Maze
         /// </summary>
         /// <param name="cols">The number of columns in the maze</param>
         /// <param name="rows">The number of rows in the maze</param>
-        public Renderer(int rows, int cols)
+        public Renderer()
         {
             SetImages();
         }
@@ -68,7 +66,7 @@ namespace Maze
         /// </summary>
         /// <param name="imageName"></param>
         /// <returns></returns>
-        private Image GetImage(String imageName)
+        public static Image GetImage(String imageName)
         {
             ResourceManager rm = Properties.Resources.ResourceManager;
             // Get a Handle on Resources
@@ -103,10 +101,14 @@ namespace Maze
         /// <param name="moveHistory">The collection of cells to draw.</param>
         public void DrawMoveHistory(Graphics graphics, List<Cell> moveHistory)
         {
-            foreach (Cell cell in moveHistory)
+            if(graphics != null && moveHistory != null)
             {
-                DrawVisitedMarker(graphics, cell);
+                foreach (Cell cell in moveHistory)
+                {
+                    DrawVisitedMarker(graphics, cell);
+                }
             }
+
         }
 
         /// <summary>
@@ -126,17 +128,21 @@ namespace Maze
         /// <param name="cell">The end position cell.</param>
         public void DrawEndPosition(Graphics graphics, Cell cell)
         {
-            Rectangle area = new Rectangle(cell.Col * CellWallWidth, cell.Row * CellWallHeight + EmptyTopSpaceHeight, CellWallWidth, CellWallHeight);
-      
-             /// Padding so that image displays
-             /// within the bounds of the cell.
-             area.Width -= CellWallThickness;
-             area.Height -= CellWallThickness;
-             area.X += CellWallThickness;
-             area.Y += CellWallThickness;
+            if(cell != null && graphics != null)
+            {
+                Rectangle area = new Rectangle(cell.Col * CellWallWidth, cell.Row * CellWallHeight + EmptyTopSpaceHeight, CellWallWidth, CellWallHeight);
 
-            graphics.DrawImage(endPositionImage,  area);
-       
+                /// Padding so that image displays
+                /// within the bounds of the cell.
+                area.Width -= CellWallThickness;
+                area.Height -= CellWallThickness;
+                area.X += CellWallThickness;
+                area.Y += CellWallThickness;
+
+                graphics.DrawImage(endPositionImage, area);
+            }
+
+     
         }
 
         /// <summary>
@@ -163,11 +169,15 @@ namespace Maze
         /// <param name="actor">The actor to render.</param>
         public void DrawActor(Graphics graphics, Actor actor)
         {
-            int actorXCoordinate = actor.Cell.Col * CellWallWidth + ActorCellPadding;
-            int actorYCoordinate = actor.Cell.Row * CellWallHeight + ActorCellPadding + EmptyTopSpaceHeight;
+            if(actor != null && graphics != null)
+            {
+                int actorXCoordinate = actor.Cell.Col * CellWallWidth + ActorCellPadding;
+                int actorYCoordinate = actor.Cell.Row * CellWallHeight + ActorCellPadding + EmptyTopSpaceHeight;
 
-            graphics.DrawImage(GetRotatedImage(actorImage, actor.LastDirection), new Rectangle(actorXCoordinate, actorYCoordinate, 
-                                             CellWallWidth / 2, CellWallHeight / 2));    
+                graphics.DrawImage(GetRotatedImage(actorImage, actor.LastDirection), new Rectangle(actorXCoordinate, actorYCoordinate,
+                                                 CellWallWidth / 2, CellWallHeight / 2));    
+
+            }
         }
 
         /// <summary>
@@ -216,19 +226,19 @@ namespace Maze
         /// <param name="sourceImage">The source image</param>
         /// <param name="directionTravelled"></param>
         /// <returns></returns>
-        public Image GetRotatedImage(Image sourceImage, GameComponents.Maze.Directions directionTravelled)
+        public static Image GetRotatedImage(Image sourceImage, GameComponents.Maze.Direction directionTravelled)
         {
             Image rotatedImage = new Bitmap(sourceImage);
 
             switch (directionTravelled)
             {
-                case GameComponents.Maze.Directions.North:
+                case GameComponents.Maze.Direction.North:
                     rotatedImage.RotateFlip(RotateFlipType.Rotate90FlipY);
                     break;
-                case GameComponents.Maze.Directions.South:
+                case GameComponents.Maze.Direction.South:
                     rotatedImage.RotateFlip(RotateFlipType.Rotate90FlipX);
                     break;
-                case GameComponents.Maze.Directions.West:
+                case GameComponents.Maze.Direction.West:
                     rotatedImage.RotateFlip(RotateFlipType.RotateNoneFlipX);
                     break;
                 default:
@@ -245,12 +255,16 @@ namespace Maze
         /// </summary>
         /// <param name="graphics">The form's graphics.</param>
         /// <param name="message">The message to display.</param>
-        public void DrawWin(Graphics graphics, String message)
+        public static void DrawWin(Graphics graphics, String message)
         {
-            Font winDrawFont = new Font("Consolas", 16);
-            SolidBrush winDrawBrush = new SolidBrush(Color.White);
-            PointF winDrawPoint = new PointF(0, EmptyTopSpaceHeight / 2);
-            graphics.DrawString(message,  winDrawFont, winDrawBrush, winDrawPoint);
+            if(graphics != null && message != null)
+            {
+                Font winDrawFont = new Font("Consolas", 16);
+                SolidBrush winDrawBrush = new SolidBrush(Color.White);
+                PointF winDrawPoint = new PointF(0, EmptyTopSpaceHeight / 2);
+                graphics.DrawString(message, winDrawFont, winDrawBrush, winDrawPoint);
+            }
+
         }
 
 
@@ -261,27 +275,34 @@ namespace Maze
         /// </summary>
         /// <param name="graphics"></param>
         /// <param name="actor"></param>
-        public void DisplayCannonStatus(Graphics graphics, GameComponents.Actor actor)
+        public static  void DisplayCannonStatus(Graphics graphics, GameComponents.Tank actor)
         {
+
             Font winDrawFont = new Font("Consolas", 16);
             SolidBrush winDrawBrush = new SolidBrush(Color.White);
             PointF winDrawPoint = new PointF(0, 0);
 
-            if (actor.NumberOfShells > 0 && actor.ShotDirection != GameComponents.Maze.Directions.None)
+            if(graphics != null && actor != null)
             {
-                graphics.DrawString("Cannon Primed!", winDrawFont, winDrawBrush, winDrawPoint);
-            }
-            else
-            {
-                if(actor.NumberOfShells > 0)
+
+                if (actor.NumberOfShells > 0 && actor.ShotDirection != GameComponents.Maze.Direction.None)
                 {
-                    graphics.DrawString(actor.NumberOfShells.ToString() + " shells Remaining! ", winDrawFont, winDrawBrush, winDrawPoint);
+                    graphics.DrawString("Cannon Primed!", winDrawFont, winDrawBrush, winDrawPoint);
                 }
                 else
                 {
-                    graphics.DrawString("No Shells! Press R to restart.", winDrawFont, winDrawBrush, winDrawPoint);
+                    if (actor.NumberOfShells > 0)
+                    {
+                        graphics.DrawString(actor.NumberOfShells.ToString() + " shells Remaining! ", winDrawFont, winDrawBrush, winDrawPoint);
+                    }
+                    else
+                    {
+                        graphics.DrawString("No Shells! Press R to restart.", winDrawFont, winDrawBrush, winDrawPoint);
+                    }
                 }
             }
+
+
        
         }
 

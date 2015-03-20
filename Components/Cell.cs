@@ -14,9 +14,9 @@ namespace GameComponents
     /// </summary>
     public class Cell
     {
-        protected bool leftWall = true, rightWall = true, topWall = true, bottomWall = true;
-        protected int row, col;
-        protected bool visited;
+        private bool leftWallBlocked = true, rightWallBlocked = true, topWallBlocked = true, bottomWallBlocked = true;
+        private int cellRow, cellCol;
+        private bool cellVisisted;
 
 
         /// <summary>
@@ -25,12 +25,16 @@ namespace GameComponents
         /// <param name="cell">The cell to create a copy of.</param>
         public Cell (Cell cell)
         {
-            this.leftWall = cell.LeftWall;
-            this.RightWall = cell.RightWall;
-            this.TopWall = cell.TopWall;
-            this.Row = cell.Row;
-            this.Col = cell.Col;
-            this.BottomWall = cell.BottomWall;
+            if(cell != null)
+            {
+                this.leftWallBlocked = cell.LeftWall;
+                this.RightWall = cell.RightWall;
+                this.TopWall = cell.TopWall;
+                this.Row = cell.Row;
+                this.Col = cell.Col;
+                this.BottomWall = cell.BottomWall;
+            }
+
         }
 
         /// <summary>
@@ -50,8 +54,8 @@ namespace GameComponents
         /// </summary>
         public int Col
         {
-            get { return col; }
-            set { col = value; }
+            get { return cellCol; }
+            set { cellCol = value; }
         }
 
         /// <summary>
@@ -59,8 +63,8 @@ namespace GameComponents
         /// </summary>
         public int Row
         {
-            get { return row; }
-            set { row = value; }
+            get { return cellRow; }
+            set { cellRow = value; }
         }
 
         /// <summary>
@@ -69,8 +73,8 @@ namespace GameComponents
         /// </summary>
         public bool BottomWall
         {
-            get { return bottomWall; }
-            set { bottomWall = value; }
+            get { return bottomWallBlocked; }
+            set { bottomWallBlocked = value; }
         }
 
         /// <summary>
@@ -79,8 +83,8 @@ namespace GameComponents
         /// </summary>
         public bool TopWall
         {
-            get { return topWall; }
-            set { topWall = value; }
+            get { return topWallBlocked; }
+            set { topWallBlocked = value; }
         }
 
         /// <summary>
@@ -89,8 +93,8 @@ namespace GameComponents
         /// </summary>
         public bool RightWall
         {
-            get { return rightWall; }
-            set { rightWall = value; }
+            get { return rightWallBlocked; }
+            set { rightWallBlocked = value; }
         }
 
         /// <summary>
@@ -99,8 +103,8 @@ namespace GameComponents
         /// </summary>
         public bool LeftWall
         {
-            get { return leftWall; }
-            set { leftWall = value; }
+            get { return leftWallBlocked; }
+            set { leftWallBlocked = value; }
         }
 
 
@@ -109,11 +113,9 @@ namespace GameComponents
         /// </summary>
         public bool Visited
         {
-            get { return visited; }
-            set { visited = value; }
+            get { return cellVisisted; }
+            set { cellVisisted = value; }
         }
 
-
-        public bool BottomWalll { get; set; }
     }
 }

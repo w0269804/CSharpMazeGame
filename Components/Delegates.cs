@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameComponents
 {
-        public delegate void MazeSolvedHandler();
-        public delegate void CannonPrimedHandler();
+        public delegate void MazeSolvedEventHandler();
+        public delegate void CannonPrimedEventHandler();
    
 }

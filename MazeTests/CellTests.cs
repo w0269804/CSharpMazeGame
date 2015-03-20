@@ -20,6 +20,15 @@ namespace GameTests
             Cell testCell = new Cell(row, col);
             Assert.IsTrue(testCell.Col == col);
             Assert.IsTrue(testCell.Row == row);
+            Cell secondCell = new Cell(testCell);
+
+            ////
+            Assert.AreEqual(testCell.Row, secondCell.Row);
+            Assert.AreEqual(testCell.Col, secondCell.Col);
+            Assert.AreEqual(testCell.LeftWall, secondCell.LeftWall);
+            Assert.AreEqual(testCell.RightWall, secondCell.RightWall);
+            Assert.AreEqual(testCell.TopWall, secondCell.TopWall);
+            Assert.AreEqual(testCell.BottomWall, secondCell.BottomWall);
         }
 
         /// <summary>

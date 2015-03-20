@@ -11,26 +11,26 @@ using GameComponents;
 
 namespace Maze
 {
-    public partial class frmGameField : Form
+    public partial class FormGameField : Form
     {
 
         private GameComponents.Maze maze;
         private Renderer renderer;
         public static readonly int NumberOfCells= 10;
-        public event MazeSolvedHandler Solved;
-        public event CannonPrimedHandler CannonAimed;
+        public event MazeSolvedEventHandler Solved;
+        public event CannonPrimedEventHandler CannonAimed;
 
         private static readonly string WinMessage = "You win!";
 
-        public frmGameField()
+        public FormGameField()
         {
 
             maze = new GameComponents.Maze(NumberOfCells, NumberOfCells);
             
-            CannonAimed = new CannonPrimedHandler(CannonPrimed);
-            Solved = new MazeSolvedHandler(DisplayWin);
+            CannonAimed = new CannonPrimedEventHandler(CannonPrimed);
+            Solved = new MazeSolvedEventHandler(DisplayWin);
 
-            maze.cannonPrimed += CannonAimed;
+            maze.CannonPrimedEventHandler += CannonAimed;
 
             InitializeComponent();
             CreateMaze();
@@ -50,7 +50,7 @@ namespace Maze
         /// </summary>
         private void InitializeRenderer()
         {
-            renderer = new Renderer(NumberOfCells, NumberOfCells);
+            renderer = new Renderer();
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Maze
         /// </summary>
         private void SetMazeSolvedEventListener()
         {
-            Solved += new MazeSolvedHandler(CannonPrimed);
+            Solved += new MazeSolvedEventHandler(CannonPrimed);
         }
 
         /// <summary>
@@ -82,32 +82,32 @@ namespace Maze
             switch(e.KeyChar.ToString().ToUpper())
             {
                 case "S":
-                    actorMoved = maze.MoveActor(GameComponents.Maze.Directions.South);
+                    actorMoved = maze.MoveActor(GameComponents.Maze.Direction.South);
                     break;
                 case "W":
-                    actorMoved = maze.MoveActor(GameComponents.Maze.Directions.North);
+                    actorMoved = maze.MoveActor(GameComponents.Maze.Direction.North);
                     break;
                 case "A":
-                    actorMoved = maze.MoveActor(GameComponents.Maze.Directions.West);
+                    actorMoved = maze.MoveActor(GameComponents.Maze.Direction.West);
                     break;
                 case "D":
-                    actorMoved = maze.MoveActor(GameComponents.Maze.Directions.East);
+                    actorMoved = maze.MoveActor(GameComponents.Maze.Direction.East);
                     break;
 
                 case " ":
                     actorMoved = maze.BlastWall();
                     break;
                 case "6":
-                    maze.AimCannon(GameComponents.Maze.Directions.East);
+                    maze.AimCannon(GameComponents.Maze.Direction.East);
                     break;
                 case "4":
-                    maze.AimCannon(GameComponents.Maze.Directions.West);
+                    maze.AimCannon(GameComponents.Maze.Direction.West);
                     break;
                 case "8":
-                    maze.AimCannon(GameComponents.Maze.Directions.North);
+                    maze.AimCannon(GameComponents.Maze.Direction.North);
                     break;
                 case "2":
-                    maze.AimCannon(GameComponents.Maze.Directions.South);
+                    maze.AimCannon(GameComponents.Maze.Direction.South);
                     break;
 
                 case "R":
@@ -150,11 +150,11 @@ namespace Maze
 
             if(maze.MazeSolved())
             {
-                renderer.DrawWin(e.Graphics, WinMessage);
+                Renderer.DrawWin(e.Graphics, WinMessage);
             }
             else
             {
-                renderer.DisplayCannonStatus(e.Graphics, maze.Actor);
+               Renderer.DisplayCannonStatus(e.Graphics, maze.Actor);
             }
 
         }

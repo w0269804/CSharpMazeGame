@@ -16,7 +16,7 @@ namespace Maze
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmGameField());
+            Application.Run(new FormGameField());
         }
     }
 }

@@ -11,24 +11,19 @@ namespace GameComponents
     /// which will be responsible
     /// for moving throughout the maze
     /// </summary>
-    public class Actor
+    public abstract class Actor
     {
-        private Cell cell; /// the cell the actor is occupying
-        private bool shotRemains = true;
-        private int numberOfShells = 3;
-        private Maze.Directions shotDirection = Maze.Directions.None;
+       private Cell cell; /// the cell the actor is occupying
 
         /// <summary>
-        /// Creates an actor object
-        /// which will have a certain
-        /// cell within a grid.
+        /// The last direction the actor moved.
         /// </summary>
-        /// <param name="position"></param>
-        public Actor(Cell position)
+        public Maze.Direction LastDirection
         {
-            this.cell = position;
-            LastDirection = Maze.Directions.None;
+            get;
+            set;
         }
+
 
         /// <summary>
         /// Returns the game cell
@@ -39,36 +34,6 @@ namespace GameComponents
             get { return cell; }
             set { cell = value; }
         }
-
-        /// <summary>
-        /// The last direction the actor moved.
-        /// </summary>
-        public Maze.Directions LastDirection
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// The number of shells the tank 
-        /// remaining.
-        /// </summary>
-        public int NumberOfShells
-        {
-            get { return numberOfShells; }
-            set { numberOfShells = value; }
-        }
-
-        /// <summary>
-        /// The direction in which the cannon
-        /// is aimed.
-        /// </summary>
-        public Maze.Directions ShotDirection
-        {
-            get { return shotDirection; }
-            set { shotDirection = value; }
-        }
-
 
 
     }

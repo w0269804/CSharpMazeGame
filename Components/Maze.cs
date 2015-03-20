@@ -11,7 +11,7 @@ namespace GameComponents
 
     public class Maze
     {
-        private Actor actor;
+        private Tank actor; 
         private Cell[,] maze;
         private Cell goal; 
         private int rows;
@@ -19,13 +19,13 @@ namespace GameComponents
         private Random random;
         private List<Cell> moveHistory;
 
-        public event CannonPrimedHandler cannonPrimed;
+        public event CannonPrimedEventHandler CannonPrimedEventHandler;
         private MazeGenerator mazeGenerator;
 
         /// <summary>
         /// The possible directions to travel.
         /// </summary>
-        public enum Directions
+        public enum Direction
         {
             North, South, West, East, None
         }
@@ -64,7 +64,7 @@ namespace GameComponents
         /// <returns></returns>
         public bool MazeSolved()
         {
-            return actor.Cell.Equals(goal);
+            return actor.Cell.Row == goal.Row && actor.Cell.Col == goal.Col;
         }
 
         /// <summary>
@@ -84,20 +84,26 @@ namespace GameComponents
         /// </summary>
         private void InitializeActor()
         {
-            actor = new Actor(maze[random.Next(0, cols - 1),random.Next(0, rows - 1)]);
+            actor = new Tank(maze[random.Next(0, cols - 1),random.Next(0, rows - 1)]);
             moveHistory = new List<Cell>();
             moveHistory.Add(actor.Cell);
         }
 
 
-        public void AimCannon(Directions direction)
+        /// <summary>
+        /// Directs the cannon in one of the enumerated
+        /// directions of the maze. Used to prime the 
+        /// cannon before shooting a wall.
+        /// </summary>
+        /// <param name="direction"></param>
+        public void AimCannon(Direction direction)
         {
             if(actor.NumberOfShells > 0)
             {
                 actor.ShotDirection = direction;
 
-                if (cannonPrimed != null)
-                    cannonPrimed();
+                if (CannonPrimedEventHandler != null)
+                    CannonPrimedEventHandler();
             }
    
         }
@@ -105,7 +111,7 @@ namespace GameComponents
         /// <summary>
         /// Returns the actor.
         /// </summary>
-        public Actor Actor
+        public Tank Actor
         {
             get { return actor; }
             set { actor = value; }
@@ -119,10 +125,10 @@ namespace GameComponents
         /// <returns></returns>
         public bool BlastWall()
         {
-            if (actor.NumberOfShells > 0 && actor.ShotDirection != Directions.None)
+            if (actor.NumberOfShells > 0 && actor.ShotDirection != Direction.None)
             {
                 DestroyWall(actor.Cell, actor.ShotDirection);
-                actor.ShotDirection = Directions.None;
+                actor.ShotDirection = Direction.None;
                 actor.NumberOfShells--;
             }
 
@@ -134,23 +140,23 @@ namespace GameComponents
         /// </summary>
         /// <param name="sourceCell"></param>
         /// <param name="direction"></param>
-        private void DestroyWall(Cell sourceCell, Directions direction)
+        private void DestroyWall(Cell sourceCell, Direction direction)
         {
             switch (direction)
             {
-                case Directions.North:
+                case Direction.North:
                     DestroyNorthWall(sourceCell);
                     break;             
-                case Directions.South:
+                case Direction.South:
                     DestroySouthWall(sourceCell);
                     break;
-                case Directions.West:
+                case Direction.West:
                     DestroyWestWall(sourceCell);
                     break; 
-                case Directions.East:
+                case Direction.East:
                     DestroyEastWall(sourceCell);
                     break;
-                case Directions.None:
+                case Direction.None:
                     break;
                 default:
                     break;
@@ -211,26 +217,25 @@ namespace GameComponents
         /// </summary>
         /// <param name="direction">The direction to move.</param>
         /// <returns>Whether the actor has moved</returns>
-        public bool MoveActor(Directions direction)
+        public bool MoveActor(Direction direction)
         {
             bool moved;
 
-            if (moved = CanMove(actor.Cell.Row, actor.Cell.Col, direction))
+            if (moved = IsPathFree(actor.Cell.Row, actor.Cell.Col, direction))
             {
-                Cell temp = Actor.Cell; /// the current cell before the move
- 
-                switch (direction)
+   
+               switch (direction)
                 {
-                    case Directions.North:
+                    case Direction.North:
                         actor.Cell = maze[actor.Cell.Row - 1, actor.Cell.Col];
                         break;
-                    case Directions.South:
+                    case Direction.South:
                         actor.Cell = maze[actor.Cell.Row + 1, actor.Cell.Col];
                         break;
-                    case Directions.West:
+                    case Direction.West:
                         actor.Cell = maze[actor.Cell.Row, actor.Cell.Col - 1];
                         break;
-                    case Directions.East:
+                    case Direction.East:
                         actor.Cell = maze[actor.Cell.Row, actor.Cell.Col + 1];
                         break;
                     default:
@@ -258,21 +263,6 @@ namespace GameComponents
         }
 
         /// <summary>
-        /// Marks all cell positions within
-        /// the array of cells to visisted.
-        /// Used to clear the visisted status
-        /// after generating the maze pattern.
-        /// </summary>
-        private void ClearVisisted(Cell[,] maze)
-        {
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    maze[i, j].Visited = false;
-        }
-
-
-
-        /// <summary>
         /// Checks to see if the actor can move to
         /// the given row or column by checking if 
         /// it is a valid cell and if the wall configuration
@@ -282,25 +272,22 @@ namespace GameComponents
         /// <param name="col">The destination column.</param>
         /// <param name="direction">The direction of the destination from source.</param>
         /// <returns></returns>
-        private bool CanMove(int row, int col, Directions direction)
+        private bool IsPathFree(int row, int col, Direction direction)
         {
             switch (direction)
             {
-                case Directions.North:
+                case Direction.North:
                     return (row > 0 && !maze[row - 1, col].BottomWall);
-                case Directions.South:
+                case Direction.South:
                     return (row < rows - 1 && !maze[row + 1, col].TopWall);
-                case Directions.East:
+                case Direction.East:
                     return (col < cols - 1 && !maze[row, col + 1].LeftWall);
-                case Directions.West:
+                case Direction.West:
                     return (col > 0 && !maze[row, col - 1].RightWall);
                 default:
                     return false;
             }
         }
-
-
-
 
         /// <summary>
         /// Returns the array of cells.
@@ -327,6 +314,8 @@ namespace GameComponents
         /// </summary>
         public List<Cell> MoveHistory
         {
+            /// TODO: Implement a return of a generic list.
+            /// http://stackoverflow.com/questions/16806786/dont-expose-generic-list-why-to-use-collectiont-instead-of-listt-in-meth
             get { return moveHistory; }
         }
     }

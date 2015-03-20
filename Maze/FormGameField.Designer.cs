@@ -1,6 +1,6 @@
 ﻿namespace Maze
 {
-    partial class frmGameField
+    partial class FormGameField
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.mazeTime = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // frmGameField
@@ -49,7 +48,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Timer mazeTime;
+
     }
 }
 
