@@ -242,8 +242,7 @@ namespace GameComponents
                         break;
                 }
 
-
-                actor.LastDirection = direction;
+                actor.LastDirectionMoved = direction;
 
                 if (moveHistory.Contains(actor.Cell))
                 {

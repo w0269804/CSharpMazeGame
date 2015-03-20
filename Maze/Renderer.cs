@@ -174,7 +174,7 @@ namespace Maze
                 int actorXCoordinate = actor.Cell.Col * CellWallWidth + ActorCellPadding;
                 int actorYCoordinate = actor.Cell.Row * CellWallHeight + ActorCellPadding + EmptyTopSpaceHeight;
 
-                graphics.DrawImage(GetRotatedImage(actorImage, actor.LastDirection), new Rectangle(actorXCoordinate, actorYCoordinate,
+                graphics.DrawImage(GetRotatedImage(actorImage, actor.LastDirectionMoved), new Rectangle(actorXCoordinate, actorYCoordinate,
                                                  CellWallWidth / 2, CellWallHeight / 2));    
 
             }

@@ -9,14 +9,9 @@ namespace GameComponents
     public class Tank : Actor
     {
         private int numberOfShells = 3;
-        private Maze.Direction shotDirection = Maze.Direction.None; // the direction the cannon is aiming
+        private Maze.Direction shotDirection;
 
         /// <summary>
-        /// Initialize an actor on a given co-ordinate on
-        /// the maze.
-        /// </summary>
-        /// <param name="cell"></param>
-          /// <summary>
         /// Creates an actor object
         /// which will have a certain
         /// cell within a grid.
@@ -24,6 +19,7 @@ namespace GameComponents
         /// <param name="position"></param>
         public Tank(Cell position)
         {
+            shotDirection = Maze.Direction.None;
             this.Cell = position;
         }
 

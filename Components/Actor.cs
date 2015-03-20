@@ -18,12 +18,11 @@ namespace GameComponents
         /// <summary>
         /// The last direction the actor moved.
         /// </summary>
-        public Maze.Direction LastDirection
+        public Maze.Direction LastDirectionMoved
         {
             get;
             set;
         }
-
 
         /// <summary>
         /// Returns the game cell
@@ -34,7 +33,6 @@ namespace GameComponents
             get { return cell; }
             set { cell = value; }
         }
-
 
     }
 }
